@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>地層日記 — 記録</title>
+<link rel="stylesheet" href="css/style.css?v=13">
+</head>
+<body>
+<canvas id="stage"></canvas>
+<div id="toast"></div>
+
+<header>
+  <h1>地層日記</h1>
+  <div class="meta" id="metaDate"></div>
+  <div class="meta" id="metaLayers"></div>
+  <div class="tools">
+    <button id="btnDir" hidden title="選んだフォルダへ day.json を自動保存します（Chrome / Edge）">フォルダ保存</button>
+    <button id="btnExport" title="記録全体をJSONファイルとしてダウンロードします">書き出し</button>
+    <button id="btnImport" title="書き出したJSONファイルから記録を復元します">読み込み</button>
+    <button id="btnPreview" title="今日の分が層になった姿を確認します（データは変更しません）">地層化プレビュー</button>
+    <input type="file" id="importFile" accept="application/json" hidden>
+  </div>
+</header>
+
+<div id="panel">
+  <div id="emotions"></div>
+  <div id="row">
+    <select id="fontSel" title="フォント"></select>
+    <button class="act" id="btnFonts" title="端末のフォント一覧を取得（Chrome系のみ）">読込</button>
+    <input type="number" id="sizeSel" min="12" max="120" step="2" value="30" title="文字の大きさ（px）">
+    <input type="text" id="msg" maxlength="60" placeholder="今日のひとことを、ここに">
+    <button class="act" id="btnAdd">積む</button>
+  </div>
+  <div id="status"></div>
+</div>
+
+<script src="js/app.js?v=13"></script>
+</body>
+</html>

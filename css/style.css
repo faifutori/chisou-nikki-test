@@ -1,0 +1,81 @@
+:root{
+  --ink:#FFFFFF;
+  --ink-dim:#B8B0A2;
+  --soil:#14100B;
+  --panel:rgba(236,233,227,.97);   /* 明るいグレーのパネル（背景の闇と区別する） */
+  --panel-ink:#221C14;
+  --panel-ink-dim:#6E6252;
+  --field:#FFFFFF;
+  --field-ink:#221C14;
+  --field-focus:#F7F4EE;
+}
+*{ margin:0; padding:0; box-sizing:border-box; border:none; box-shadow:none; }
+html,body{ height:100%; overflow:hidden; background:var(--soil); }
+body{
+  font-family:"Hiragino Mincho ProN","Yu Mincho","BIZ UDMincho","MS Mincho",serif;
+  color:var(--ink);
+}
+canvas#stage{ position:fixed; inset:0; display:block; }
+
+/* 画面中央の案内表示 */
+#toast{
+  position:fixed; left:50%; top:42%;
+  transform:translate(-50%,-50%);
+  font-size:22px; letter-spacing:.2em; color:var(--ink);
+  text-align:center; pointer-events:none;
+  opacity:0; transition:opacity .35s ease;
+  padding:0 24px;
+}
+#toast.show{ opacity:1; }
+
+header{
+  position:fixed; top:0; left:0; right:0;
+  display:flex; align-items:baseline; gap:1.2em;
+  padding:18px 24px; pointer-events:none;
+}
+header h1{ font-size:17px; font-weight:600; letter-spacing:.35em; }
+header .meta{ font-size:12px; color:var(--ink-dim); letter-spacing:.12em; }
+header .tools{ margin-left:auto; pointer-events:auto; display:flex; gap:14px; }
+header .tools button{
+  background:none; color:var(--ink-dim); font:inherit; font-size:11px;
+  letter-spacing:.15em; cursor:pointer; opacity:.85;
+}
+header .tools button:hover, header .tools button.on{ color:var(--ink); }
+
+/* 入力パネル */
+#panel{
+  position:fixed; left:50%; bottom:22px; transform:translateX(-50%);
+  width:min(720px, calc(100% - 32px));
+  background:var(--panel); backdrop-filter:blur(6px);
+  border-radius:18px; padding:16px 18px 12px;
+}
+#emotions{ display:flex; gap:4px; justify-content:space-between; margin-bottom:12px; }
+.emo{
+  flex:1; background:none; cursor:pointer; padding:0 2px;
+  display:flex; flex-direction:column; align-items:center; gap:5px;
+  opacity:.55; transition:opacity .15s, transform .15s;
+}
+.emo .sw{ width:100%; max-width:48px; height:24px; border-radius:7px; }
+.emo .lb{ font-size:11px; color:var(--panel-ink); letter-spacing:.08em; font-family:inherit; }
+.emo:hover{ opacity:.8; }
+.emo.sel{ opacity:1; transform:translateY(-2px); }
+.emo.sel .lb::after{ content:"●"; display:block; font-size:6px; line-height:6px; margin-top:3px; }
+
+#row{ display:flex; gap:8px; }
+#row > *{ font-family:inherit; }
+select,input[type=text],input[type=number],#panel button.act{
+  background:var(--field); color:var(--field-ink); font-size:14px;
+  border-radius:8px; padding:9px 12px; outline:none;
+}
+select:focus,input[type=text]:focus,input[type=number]:focus{ background:var(--field-focus); }
+select#fontSel{ width:170px; flex-shrink:0; }
+input#sizeSel{ width:72px; flex-shrink:0; }
+input#msg{ flex:1; min-width:0; letter-spacing:.04em; }
+input#msg::placeholder{ color:#8A8274; }
+#panel button.act{ cursor:pointer; letter-spacing:.1em; flex-shrink:0; }
+#panel button.act:hover{ background:var(--field-focus); }
+#status{ font-size:11px; color:var(--panel-ink-dim); margin-top:8px; min-height:14px; letter-spacing:.08em; }
+
+@media (prefers-reduced-motion: reduce){
+  .emo{ transition:none; }
+}
