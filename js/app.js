@@ -5,13 +5,15 @@
    LAYER_INTERVAL … 地層が固まる周期
      "day"    : 24時間ごと（本番用・デフォルト）
      "hour"   : 1時間ごと（テスト用）
-     "minute" : 1分ごと（テスト用・すぐ層ができる）
+     "minute" : 1分ごと（テスト用）
+     数値     : 秒数指定（テスト用・例 30 なら30秒ごと）
 
-   例: 1分で試すなら → const LAYER_INTERVAL = "minute";
-   テストで出来た data/ 内のフォルダ（例 2026-07-03_14-05）は
+   例: 30秒で試すなら → const LAYER_INTERVAL = 30;
+       本番に戻すなら → const LAYER_INTERVAL = "day";
+   テストで出来た data/ 内のフォルダ（名前に _ が付くもの）は
    不要になったら手で削除してかまいません。
    ========================================================= */
-const LAYER_INTERVAL = "minute";
+const LAYER_INTERVAL = 30;
 /* ========================================================= */
 
 /* =========================================================
@@ -83,8 +85,15 @@ function textColorOf(rgb){
 
 /* ---------- 状態 ---------- */
 function todayStr(){   // 現在の「周期キー」を返す（= フォルダ名になる）
-  const d = new Date();
   const p = n => String(n).padStart(2, "0");
+  if(typeof LAYER_INTERVAL === "number"){
+    // 秒数指定: N秒ごとの区切りの開始時刻をキーにする（例 2026-07-04_14-05-30）
+    const ms = Math.max(5, LAYER_INTERVAL) * 1000;
+    const t = new Date(Math.floor(Date.now() / ms) * ms);
+    return `${t.getFullYear()}-${p(t.getMonth() + 1)}-${p(t.getDate())}` +
+           `_${p(t.getHours())}-${p(t.getMinutes())}-${p(t.getSeconds())}`;
+  }
+  const d = new Date();
   const base = `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
   if(LAYER_INTERVAL === "hour"){ return `${base}_${p(d.getHours())}`; }
   if(LAYER_INTERVAL === "minute"){ return `${base}_${p(d.getHours())}-${p(d.getMinutes())}`; }
@@ -718,6 +727,8 @@ addEventListener("resize", resize);
   restoreToday();
   updateMeta();
   checkRollover();
-  setInterval(checkRollover, LAYER_INTERVAL === "day" ? 30000 : 3000);  // 短周期テスト時は3秒ごとに監視
+  setInterval(checkRollover,
+    typeof LAYER_INTERVAL === "number" ? 1000        // 秒テスト時は1秒ごとに監視
+    : LAYER_INTERVAL === "day" ? 30000 : 3000);
   requestAnimationFrame(frame);
 })();
